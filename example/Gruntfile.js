@@ -10,56 +10,70 @@
 
 var path = require('path');
 
-var lrSnippet  = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+var lrSnippet = require('grunt-contrib-livereload/lib/utils')
+    .livereloadSnippet;
 var mountFolder = function(connect, dir) {
-  return connect.static(path.resolve(dir));
+    return connect.static(path.resolve(dir));
 };
 
 module.exports = function(grunt) {
-  grunt.initConfig({
+    grunt.initConfig({
 
-    watchify: {
-      options: {
-        debug: true
-      },
-      example: {
-        src: './src/**/*.js',
-        dest: 'app/js/bundle.js'
-      }
-    },
+        watchify: {
+            options: {
+                debug: false,
+                callback: function(b) {
+                    // configure the browserify instance here
+                    // b.add();
+                    // b.require();
+                    // b.external();
+                    // b.ignore();
+                    //b.require('reactify');
+                    b.transform('reactify');
+                    b.transform('uglifyify');
 
-    watch: {
-      app: {
-        files: 'app/js/bundle.js',
-        options: {
-          livereload: true
+                    // return it
+                    return b;
+                }
+            },
+            example: {
+                src: './src/**/*.js',
+                dest: 'app/js/bundle.js'
+            }
+        },
+
+        watch: {
+            app: {
+                files: 'app/js/bundle.js',
+                options: {
+                    livereload: true
+                }
+            }
+        },
+
+        connect: {
+            options: {
+                port: 9000,
+                // Change this to '0.0.0.0' to access the server from outside.
+                hostname: 'localhost'
+            },
+            livereload: {
+                options: {
+                    middleware: function(connect) {
+                        return [
+                            lrSnippet,
+                            mountFolder(connect, 'app')
+                        ];
+                    }
+                }
+            }
         }
-      }
-    },
+    });
 
-    connect: {
-      options: {
-        port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost'
-      },
-      livereload: {
-        options: {
-          middleware: function (connect) {
-            return [
-              lrSnippet,
-              mountFolder(connect, 'app')
-            ];
-          }
-        }
-      }
-    }
-  });
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-livereload');
+    grunt.loadNpmTasks('grunt-watchify');
 
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-livereload');
-  grunt.loadNpmTasks('grunt-watchify');
-
-  grunt.registerTask('default', ['watchify', 'connect', 'watch']);
+    grunt.registerTask('default', ['watchify', 'connect', 'watch']);
 };

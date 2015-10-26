@@ -25,13 +25,24 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
+    "async": "^1.5.0",
+    "babel-core": "^5.8.29",
+    "backbone": "^1.2.3",
+    "d3": "^3.5.6",
+    "i18next": "^1.10.5",
+    "jquery": "^2.1.4",
+    "react": "^0.14.0",
+    "underscore": "^1.8.3",
+    "underscore.string": "^3.2.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-livereload": "~0.1.2",
     "grunt-contrib-watch": "~0.4.4",
-    "grunt-watchify": "~0.0.3"
+    "grunt-watchify": "~0.0.3",
+    "reactify": "^1.1.1",
+    "uglifyify": "^3.0.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
